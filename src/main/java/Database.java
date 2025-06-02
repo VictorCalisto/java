@@ -84,7 +84,7 @@ public class Database {
             stmt.setDate(2, Date.valueOf(player.getBirthDate()));
             stmt.setString(3, player.getEmail());
             stmt.setString(4, player.getPasswordHash());
-            stmt.setDouble(5, player.getBalance());
+            stmt.setBigDecimal(5, player.getBalance());
             return stmt.executeUpdate() == 1;
         } catch (SQLException e) {
             System.err.println("Erro ao inserir player: " + e.getMessage());
@@ -103,7 +103,7 @@ public class Database {
                         rs.getDate("birth_date").toLocalDate(),
                         rs.getString("email"),
                         rs.getString("password_hash"),
-                        rs.getDouble("balance")
+                        rs.getBigDecimal("balance")
                     );
                 }
             }
@@ -119,7 +119,7 @@ public class Database {
             stmt.setString(1, player.getName());
             stmt.setDate(2, Date.valueOf(player.getBirthDate()));
             stmt.setString(3, player.getPasswordHash());
-            stmt.setDouble(4, player.getBalance());
+            stmt.setBigDecimal(4, player.getBalance());
             stmt.setString(5, player.getEmail());
             return stmt.executeUpdate() == 1;
         } catch (SQLException e) {

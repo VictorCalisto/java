@@ -91,10 +91,15 @@ Define os limites de aposta conforme a dificuldade da máquina selecionada:
 
 ---
 
-## 📦 Observações Técnicas
+## Login
 
 - Senha do jogador é armazenada com **hash Bcrypt**
 - Cadastro bloqueia menores de idade
 - Cadastro não permite **cadastrar email ja existente**
 - Apenas jogadores logados podem jogar
 
+
+## Dependencias
+
+- JUnit
+- Bcryp
