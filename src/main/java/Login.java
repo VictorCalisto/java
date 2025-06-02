@@ -17,7 +17,7 @@ public class Login {
         String senha = scanner.nextLine();
 
         if (existente != null) {
-            if (PasswordUtils.checkPassword(senha, existente.getPasswordHash())) {
+            if (Database.checkPassword(senha, existente.getPasswordHash())) {
                 System.out.println("Login bem-sucedido!");
                 return existente;
             } else {
@@ -49,7 +49,6 @@ public class Login {
 
             String senhaCriptografada = Database.criptPassword(senha);
             Player novo = new Player(nome, nascimento, email, senhaCriptografada);
-            boolean sucesso = Database.insertPlayer(novo);
             if (Database.insertPlayer(novo)) {
                 System.out.println("Cadastro realizado com sucesso!");
                 return novo;
