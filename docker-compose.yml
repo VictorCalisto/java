@@ -7,40 +7,26 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER:  ${POSTGRES_USER}
-      POSTGRES_PASSWORD:  ${POSTGRES_PASSWORD} # Use a mesma senha do seu DatabaseManager.java
+      POSTGRES_PASSWORD:  ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql # Certifique-se que este arquivo esteja na mesma pasta do docker-compose.yml
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U gameuser -d dealornodeald_db"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-  java-app:
+      - data:/var/lib/postgresql/data
+  java:
     build:
-      context: . # O contexto de build é o diretório atual (onde está o pom.xml e o Dockerfile)
+      context: .
       dockerfile: Dockerfile
-    container_name: dealornodeal_app
-    # Não precisamos de 'ports' se for apenas um jogo de console, mas pode manter para futuras expansões
+    container_name: java
     # ports:
     #   - "8080:8080"
     environment:
-      DATABASE_URL: jdbc:postgresql://db:5432/dealornodeald_db
-      DATABASE_USER: gameuser
-      DATABASE_PASSWORD: strongpassword
-      #JASYPT_PASSWORD_KEY: my_secret_key # Descomente e configure se usar uma chave Jasypt
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER:  ${POSTGRES_USER}
+      POSTGRES_PASSWORD:  ${POSTGRES_PASSWORD}
     depends_on:
       db:
         condition: service_healthy
     volumes:
-      # Mapeia seu código fonte para dentro do container para facilitar o desenvolvimento
-      # Isso permite que você edite o código e o container o veja sem precisar reconstruir a imagem
       - .:/app
-    # Para aplicativos de console, geralmente você não precisa de uma porta exposta.
-    # Se você quiser interagir com o stdin/stdout, pode ser útil um terminal interativo.
-    # command: java -jar app.jar
-    # tty: true # Aloca um pseudo-TTY para o container
-    # stdin_open: true # Mantém o stdin aberto
+    tty: true
+    stdin_open: true

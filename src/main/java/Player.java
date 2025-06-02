@@ -1,38 +1,30 @@
-import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
-/**
- * Represents a player in the game.
- * Note: Password handling moved to DatabaseManager and GameRanking.
- */
-class Player implements Serializable {
-    private static final long serialVersionUID = 1L;
-    private String nickname;
-    private double highestScore;
+public class Player {
+    private String name;
+    private LocalDate birthDate;
+    private String email;
+    private String passwordHash;
+    private double balance;
 
-    public Player(String nickname, double highestScore) {
-        this.nickname = nickname;
-        this.highestScore = highestScore;
+    public Player(String name, LocalDate birthDate, String email, String passwordHash) {
+        this.name = name;
+        this.birthDate = birthDate;
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.balance = new BigDecimal("50.00");
     }
 
-    public Player(String nickname) { // Construtor para novos jogadores
-        this(nickname, 0.0);
-    }
+    public String getName() { return name; }
+    public LocalDate getBirthDate() { return birthDate; }
+    public String getEmail() { return email; }
+    public String getPasswordHash() { return passwordHash; }
+    public double getBalance() { return balance; }
 
-    // Getters e Setters
-    public String getNickname() {
-        return nickname;
-    }
-
-    public double getHighestScore() {
-        return highestScore;
-    }
-
-    public void setHighestScore(double highestScore) {
-        this.highestScore = highestScore;
-    }
-
-    @Override
-    public String toString() {
-        return "Apelido: " + nickname + ", Maior Pontuação: R$" + String.format("%.2f", highestScore);
-    }
+    public void setName(String name) { this.name = name; }
+    public void setBirthDate(LocalDate birthDate) { this.birthDate = birthDate; }
+    public void setEmail(String email) { this.email = email; }
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+    public void setBalance(double balance) { this.balance = balance; }
 }
