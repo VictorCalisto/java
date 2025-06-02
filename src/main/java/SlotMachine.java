@@ -1,7 +1,10 @@
 import java.util.*;
 
 public abstract class SlotMachine {
-    protected String[] symbols = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+    protected String[] symbols = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"};
+    private final List<String> RANK_ORDER = Arrays.asList(
+        "A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"
+    );// T de Ten, porque se eu colocar 10 sai da formatacao
     protected int size;       // N linhas e N colunas
     protected int maxJokers;  // max curingas na matriz
     protected Random random = new Random();
@@ -55,15 +58,13 @@ public abstract class SlotMachine {
         }
     }
 
-    // Verifica se o player ganhou na matriz: linhas, colunas e diagonais
-    // O curinga '*' substitui qualquer símbolo para formar sequência
     public boolean checkWin(String[][] matrix) {
-        // Checa linhas
+        // Verifica linhas
         for (int row = 0; row < size; row++) {
             if (allEqualWithJoker(matrix[row])) return true;
         }
 
-        // Checa colunas
+        // Verifica colunas
         for (int col = 0; col < size; col++) {
             String[] column = new String[size];
             for (int row = 0; row < size; row++) {
@@ -72,12 +73,12 @@ public abstract class SlotMachine {
             if (allEqualWithJoker(column)) return true;
         }
 
-        // Checa diagonal principal
+        // Verifica diagonal principal
         String[] diag1 = new String[size];
         for (int i = 0; i < size; i++) diag1[i] = matrix[i][i];
         if (allEqualWithJoker(diag1)) return true;
 
-        // Checa diagonal secundária
+        // Verifica diagonal secundária
         String[] diag2 = new String[size];
         for (int i = 0; i < size; i++) diag2[i] = matrix[i][size - 1 - i];
         if (allEqualWithJoker(diag2)) return true;
@@ -85,20 +86,74 @@ public abstract class SlotMachine {
         return false;
     }
 
-    // Retorna true se todos os símbolos são iguais ou curinga pode substituir
+    // Verifica se todos os elementos são iguais ou substituíveis por '*'
     private boolean allEqualWithJoker(String[] arr) {
         String base = null;
+
+        // Define o primeiro símbolo real (não '*') como base
         for (String s : arr) {
             if (!s.equals("*")) {
                 base = s;
                 break;
             }
         }
-        if (base == null) return false; // só curingas? não conta vitória
+        if (base == null) return false; // todos são '*', não é uma vitória válida
 
+        // Verifica se todos são iguais ao base ou '*'
         for (String s : arr) {
-            if (!s.equals(base) && !s.equals("*")) return false;
+            if (!s.equals("*") && !s.equals(base)) return false;
         }
         return true;
     }
+
+    public boolean hasBonusSequence(String[][] matrix) {
+        // Verifica linhas
+        for (int row = 0; row < size; row++) {
+            if (isOrderedSequence(matrix[row])) return true;
+        }
+
+        // Verifica colunas
+        for (int col = 0; col < size; col++) {
+            String[] column = new String[size];
+            for (int row = 0; row < size; row++) {
+                column[row] = matrix[row][col];
+            }
+            if (isOrderedSequence(column)) return true;
+        }
+
+        // Verifica diagonal principal
+        String[] diag1 = new String[size];
+        for (int i = 0; i < size; i++) diag1[i] = matrix[i][i];
+        if (isOrderedSequence(diag1)) return true;
+
+        // Verifica diagonal secundária
+        String[] diag2 = new String[size];
+        for (int i = 0; i < size; i++) diag2[i] = matrix[i][size - 1 - i];
+        if (isOrderedSequence(diag2)) return true;
+
+        return false;
+    }
+
+    // Verifica se o array está em ordem crescente ou decrescente (sem '*')
+    private boolean isOrderedSequence(String[] arr) {
+        List<Integer> positions = new ArrayList<>();
+
+        for (String s : arr) {
+            if (s.equals("*")) return false; // não pode ter curinga
+            int index = RANK_ORDER.indexOf(s);
+            if (index == -1) return false; // símbolo inválido
+            positions.add(index);
+        }
+
+        boolean ascending = true;
+        boolean descending = true;
+
+        for (int i = 1; i < positions.size(); i++) {
+            if (positions.get(i) != positions.get(i - 1) + 1) ascending = false;
+            if (positions.get(i) != positions.get(i - 1) - 1) descending = false;
+        }
+
+        return ascending || descending;
+    }
+
 }
