@@ -1,0 +1,62 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\geometry{margin=1in}
+\title{Análise Matemática da Vantagem da Casa no Jogo de Caça-Níqueis}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{Cálculo da Probabilidade de Vitória}
+
+Dado um tabuleiro de tamanho $3 \times 3$ com símbolos sorteados aleatoriamente e independentemente, onde há 13 símbolos possíveis (``A'', ``2'', ..., ``K''), a probabilidade de obter uma linha com três símbolos idênticos (sem considerar curingas) é:
+
+\begin{equation}
+P = \left( \frac{1}{13} \right) \cdot \left( \frac{1}{13} \right) \cdot \left( \frac{1}{13} \right) = \frac{1}{2197}
+\end{equation}
+
+Como existem 3 linhas horizontais, 3 verticais e 2 diagonais, temos 8 linhas no total que podem resultar em vitória. Assim, a probabilidade de obter \textbf{pelo menos uma linha vencedora} (com símbolos iguais) é estimada por:
+
+\begin{equation}
+P_{\text{total}} = 8 \cdot \frac{1}{2197} \approx 0{,}00364 \quad \text{ou} \quad 0{,}364\%
+\end{equation}
+
+\section*{Relação entre Probabilidade e Retorno (Odds)}
+
+A \textbf{odds justa} para o jogador, baseada na probabilidade de vitória, seria o inverso da probabilidade:
+
+\begin{equation}
+\text{Odds} = \frac{1}{0{,}00364} \approx 274{,}625
+\end{equation}
+
+Ou seja, um pagamento justo baseado em risco seria de aproximadamente \textbf{274,625 vezes} o valor apostado.
+
+Contudo, o sistema paga apenas:
+
+\begin{equation}
+\text{Pagamento Real} = 10 \times \text{aposta}
+\end{equation}
+
+\section*{Vantagem da Casa}
+
+A \textbf{expectância matemática do jogador} ao apostar $R\$1{,}00$ é:
+
+\begin{equation}
+E = 0{,}00364 \cdot 10 + (1 - 0{,}00364) \cdot 0 = 0{,}0364
+\end{equation}
+
+Portanto, a \textbf{esperança de retorno} do jogador é de apenas \textbf{3,64 centavos por real apostado}, implicando em uma \textbf{perda esperada de R\$ 0{,}9636} a cada R\$1 apostado.
+
+A \textbf{vantagem da casa}, portanto, é:
+
+\begin{equation}
+\text{House Edge} = 1 - E = 1 - 0{,}0364 = 0{,}9636 \quad \text{ou} \quad 96{,}36\%
+\end{equation}
+
+\section*{Conclusão}
+
+A análise matemática demonstra que o jogo é altamente desfavorável ao jogador. A vantagem estatística da casa (house edge) de \textbf{96,36\%} significa que, em longo prazo, o sistema retém quase toda a quantia apostada, remunerando o jogador muito abaixo da odds justa baseada na probabilidade de vitória real. Este tipo de jogo é projetado para gerar lucro consistente para o operador, não para o apostador.
+\end{document}
