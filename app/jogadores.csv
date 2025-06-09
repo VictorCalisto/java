@@ -1,3 +1,4 @@
 email,senha_hash,saldo,data_de_nascimento,apelido
-usuario@exemplo.com,55a5e9e78207b4df8699d60886fa070079463547b095d1a05bc719bb4e6cd251,52.5,1999-01-01,SuperJogador
-fulano@gmail.com,a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3,40.0,2000-01-01,fulano
+fulano@gmail.com,a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3,40.00,2000-01-01,fulano
+victor.calisto@gmail.com,a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3,230.00,2000-01-01,Victor
+usuario@exemplo.com,55a5e9e78207b4df8699d60886fa070079463547b095d1a05bc719bb4e6cd251,52.50,1999-01-01,SuperJogador
