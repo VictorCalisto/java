@@ -1,44 +1,45 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Interface para definir o contrato de exibição de mensagens.
- * As classes que lidam com a interface do usuário (ex: Principal, SistemaAutenticacao, CacaNiquel)
+ * As classes que lidam com a interface do usuário (ex: Principal,
+ * SistemaAutenticacao, CacaNiquel)
  * implementarão esta interface para padronizar como as mensagens são mostradas.
  */
 interface ExibidorDeMensagens {
     /**
      * Exibe uma mensagem simples no console.
+     *
      * @param mensagem A string da mensagem a ser exibida.
      */
     void exibirMensagem(String mensagem);
 
     /**
      * Exibe uma mensagem formatada usando o estilo printf no console.
+     *
      * @param formato A string de formato.
-     * @param args Argumentos a serem formatados.
+     * @param args    Argumentos a serem formatados.
      */
     void exibirMensagemFormatada(String formato, Object... args);
 }
-
 
 /**
  * Classe que representa um jogador no sistema do caça-níqueis.
@@ -54,10 +55,10 @@ class Jogador {
     /**
      * Construtor da classe Jogador.
      *
-     * @param email O email do jogador.
-     * @param senha A senha do jogador.
+     * @param email            O email do jogador.
+     * @param senha            A senha do jogador.
      * @param dataDeNascimento A data de nascimento do jogador.
-     * @param apelido O apelido do jogador.
+     * @param apelido          O apelido do jogador.
      */
     public Jogador(String email, String senha, LocalDate dataDeNascimento, String apelido) {
         this.senhaHash = gerarHashSHA256(senha); // Hash da senha para segurança.
@@ -107,7 +108,8 @@ class Jogador {
             StringBuilder hexString = new StringBuilder();
             for (byte b : hash) {
                 String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0');
+                if (hex.length() == 1)
+                    hexString.append('0');
                 hexString.append(hex);
             }
             return hexString.toString();
@@ -173,7 +175,8 @@ class Jogador {
      * Realiza uma aposta, diminuindo o saldo do jogador.
      *
      * @param valor O valor da aposta.
-     * @throws RuntimeException Se o jogador for inativo ou tiver saldo insuficiente.
+     * @throws RuntimeException Se o jogador for inativo ou tiver saldo
+     *                          insuficiente.
      */
     public void apostar(double valor) {
         if (!podeJogar()) {
@@ -270,7 +273,9 @@ class SistemaAutenticacao implements ExibidorDeMensagens { // Implementa a inter
                     Jogador jogador = usuarios.get(emailLogin); // Tenta encontrar o jogador pelo email.
 
                     if (jogador == null) {
-                        exibirMensagem("Você ainda não tem um cadastro. Por favor, cadastre-se primeiro."); // Usa o método da interface
+                        exibirMensagem("Você ainda não tem um cadastro. Por favor, cadastre-se primeiro."); // Usa o
+                                                                                                            // método da
+                                                                                                            // interface
                         break; // Volta para o menu principal.
                     }
 
@@ -279,15 +284,24 @@ class SistemaAutenticacao implements ExibidorDeMensagens { // Implementa a inter
                         exibirMensagem("Digite sua senha:"); // Usa o método da interface
                         String senhaDigitada = scanner.nextLine();
                         if (jogador.autenticar(senhaDigitada)) {
-                            exibirMensagemFormatada("Login bem-sucedido! Bem-vindo(a), %s.%n", jogador.getApelido()); // Usa o método da interface
+                            exibirMensagemFormatada("Login bem-sucedido! Bem-vindo(a), %s.%n", jogador.getApelido()); // Usa
+                                                                                                                      // o
+                                                                                                                      // método
+                                                                                                                      // da
+                                                                                                                      // interface
                             return jogador; // Retorna o objeto do jogador logado.
                         } else {
                             tentativas++;
-                            exibirMensagemFormatada("Senha incorreta. Você tentou %d vez(es).%n", tentativas); // Usa o método da interface
+                            exibirMensagemFormatada("Senha incorreta. Você tentou %d vez(es).%n", tentativas); // Usa o
+                                                                                                               // método
+                                                                                                               // da
+                                                                                                               // interface
                             if (tentativas >= tentativasSemEspera) {
                                 // Calcula o tempo de espera progressivo.
                                 long tempoDormir = (tentativas - (tentativasSemEspera - 1)) * segundosEspera;
-                                exibirMensagemFormatada("Muitas tentativas incorretas. Por favor, espere %d segundos antes de tentar novamente.%n", tempoDormir); // Usa o método da interface
+                                exibirMensagemFormatada(
+                                        "Muitas tentativas incorretas. Por favor, espere %d segundos antes de tentar novamente.%n",
+                                        tempoDormir); // Usa o método da interface
                                 try {
                                     Thread.sleep(tempoDormir * 1000); // Dorme por tempoDormir segundos.
                                 } catch (InterruptedException e) {
@@ -313,7 +327,8 @@ class SistemaAutenticacao implements ExibidorDeMensagens { // Implementa a inter
                     try {
                         dataNascimento = LocalDate.parse(scanner.nextLine());
                     } catch (java.time.format.DateTimeParseException e) {
-                        exibirMensagem("Formato de data inválido. Por favor, use AAAA-MM-DD."); // Usa o método da interface
+                        exibirMensagem("Formato de data inválido. Por favor, use AAAA-MM-DD."); // Usa o método da
+                                                                                                // interface
                         break; // Volta para o menu principal.
                     }
 
@@ -321,7 +336,8 @@ class SistemaAutenticacao implements ExibidorDeMensagens { // Implementa a inter
                     String apelidoCadastro = scanner.nextLine();
 
                     Jogador novoJogador = cadastrar(emailCadastro, senhaCadastro, dataNascimento, apelidoCadastro);
-                    exibirMensagem("Cadastro realizado com sucesso! Você pode fazer login agora."); // Usa o método da interface
+                    exibirMensagem("Cadastro realizado com sucesso! Você pode fazer login agora."); // Usa o método da
+                                                                                                    // interface
                     break; // Volta para o menu principal.
                 default:
                     exibirMensagem("Escolha inválida. Por favor, digite 1 ou 2."); // Usa o método da interface
@@ -333,10 +349,10 @@ class SistemaAutenticacao implements ExibidorDeMensagens { // Implementa a inter
     /**
      * Cadastra um novo jogador no sistema.
      *
-     * @param email O email do jogador.
-     * @param senha A senha do jogador.
+     * @param email    O email do jogador.
+     * @param senha    A senha do jogador.
      * @param dataNasc A data de nascimento do jogador.
-     * @param apelido O apelido do jogador.
+     * @param apelido  O apelido do jogador.
      * @return O objeto Jogador recém-criado.
      * @throws RuntimeException Se o email já estiver cadastrado.
      */
@@ -397,7 +413,8 @@ class SistemaAutenticacao implements ExibidorDeMensagens { // Implementa a inter
                     String apelido = partes[4];
 
                     // Recria o objeto Jogador a partir dos dados do CSV.
-                    // Passamos uma senha dummy para o construtor, pois o hash real será definido a seguir.
+                    // Passamos uma senha dummy para o construtor, pois o hash real será definido a
+                    // seguir.
                     Jogador jogador = new Jogador(email, "senha_dummy_para_carga", dataNascimento, apelido);
                     jogador.setSenhaHash(senhaHash); // Define o hash da senha diretamente do CSV
                     jogador.setSaldo(saldo);
@@ -416,7 +433,8 @@ class SistemaAutenticacao implements ExibidorDeMensagens { // Implementa a inter
  * Classe base para os diferentes tipos de caça-níqueis.
  */
 abstract class CacaNiquel implements ExibidorDeMensagens { // Implementa a interface
-    protected static final List<String> SIMBOLOS = Arrays.asList("A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"); // Símbolos padrão.
+    protected static final List<String> SIMBOLOS = Arrays.asList("A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J",
+            "Q", "K"); // Símbolos padrão.
     protected static final String CORINGA = "*"; // Símbolo curinga.
     protected Random random; // Objeto Random para geração de números aleatórios.
     protected Scanner scanner; // Objeto Scanner para leitura de entrada do usuário.
@@ -430,10 +448,10 @@ abstract class CacaNiquel implements ExibidorDeMensagens { // Implementa a inter
     /**
      * Construtor da classe CacaNiquel.
      *
-     * @param tamanho Tamanho do tabuleiro.
-     * @param limiteCoringa Limite de curingas.
-     * @param apostaMin Aposta mínima.
-     * @param apostaMax Aposta máxima.
+     * @param tamanho             Tamanho do tabuleiro.
+     * @param limiteCoringa       Limite de curingas.
+     * @param apostaMin           Aposta mínima.
+     * @param apostaMax           Aposta máxima.
      * @param multiplicadorPremio Multiplicador de prêmio.
      */
     public CacaNiquel(int tamanho, int limiteCoringa, int apostaMin, int apostaMax, int multiplicadorPremio) {
@@ -460,15 +478,18 @@ abstract class CacaNiquel implements ExibidorDeMensagens { // Implementa a inter
     /**
      * Executa uma rodada do jogo de caça-níqueis.
      *
-     * @param jogador O jogador que está apostando.
+     * @param jogador     O jogador que está apostando.
      * @param valorAposta O valor da aposta.
      * @return Um array contendo o tabuleiro, status de vitória e status de bônus.
      * @throws RuntimeException Se a aposta estiver fora dos limites.
      */
     public Object[] jogar(Jogador jogador, double valorAposta) {
         if (valorAposta < apostaMin || valorAposta > apostaMax) {
-            exibirMensagemFormatada("Valor da aposta fora dos limites (%d-%d).%n", apostaMin, apostaMax); // Usa o método da interface
-            throw new RuntimeException(String.format("Valor da aposta fora dos limites (%d-%d).", apostaMin, apostaMax));
+            exibirMensagemFormatada("Valor da aposta fora dos limites (%d-%d).%n", apostaMin, apostaMax); // Usa o
+                                                                                                          // método da
+                                                                                                          // interface
+            throw new RuntimeException(
+                    String.format("Valor da aposta fora dos limites (%d-%d).", apostaMin, apostaMax));
         }
 
         jogador.apostar(valorAposta); // Decrementa o saldo do jogador.
@@ -479,15 +500,19 @@ abstract class CacaNiquel implements ExibidorDeMensagens { // Implementa a inter
 
         if (vitoria) {
             jogador.recompensar(valorAposta * multiplicadorPremio); // Recompensa por vitória.
-            exibirMensagemFormatada("Parabéns! Você ganhou R$%.2f!%n", (valorAposta * multiplicadorPremio)); // Usa o método da interface
+            exibirMensagemFormatada("Parabéns! Você ganhou R$%.2f!%n", (valorAposta * multiplicadorPremio)); // Usa o
+                                                                                                             // método
+                                                                                                             // da
+                                                                                                             // interface
         } else if (bonus) {
             jogador.recompensar(valorAposta); // Recompensa por bônus (metade da vitória).
-            exibirMensagemFormatada("Você ganhou um bônus! Você ganhou R$%.2f!%n", (valorAposta)); // Usa o método da interface
+            exibirMensagemFormatada("Você ganhou um bônus! Você ganhou R$%.2f!%n", (valorAposta)); // Usa o método da
+                                                                                                   // interface
         } else {
             exibirMensagem("Nenhuma vitória desta vez."); // Usa o método da interface
         }
 
-        return new Object[]{tabuleiro, vitoria, bonus};
+        return new Object[] { tabuleiro, vitoria, bonus };
     }
 
     /**
@@ -497,16 +522,20 @@ abstract class CacaNiquel implements ExibidorDeMensagens { // Implementa a inter
      */
     public int solicitarValorAposta() {
         while (true) {
-            exibirMensagemFormatada("Digite o valor da aposta (entre %d e %d):%n", apostaMin, apostaMax); // Usa o método da interface
+            exibirMensagemFormatada("Digite o valor da aposta (entre %d e %d):%n", apostaMin, apostaMax); // Usa o
+                                                                                                          // método da
+                                                                                                          // interface
             String entrada = scanner.nextLine();
             try {
                 int valor = Integer.parseInt(entrada);
                 if (valor >= apostaMin && valor <= apostaMax) {
                     return valor;
                 }
-                exibirMensagemFormatada("Valor inválido. Digite um número inteiro entre %d e %d.%n", apostaMin, apostaMax); // Usa o método da interface
+                exibirMensagemFormatada("Valor inválido. Digite um número inteiro entre %d e %d.%n", apostaMin,
+                        apostaMax); // Usa o método da interface
             } catch (NumberFormatException e) {
-                exibirMensagemFormatada("Entrada inválida. Digite um número inteiro entre %d e %d.%n", apostaMin, apostaMax); // Usa o método da interface
+                exibirMensagemFormatada("Entrada inválida. Digite um número inteiro entre %d e %d.%n", apostaMin,
+                        apostaMax); // Usa o método da interface
             }
         }
     }
@@ -528,7 +557,7 @@ abstract class CacaNiquel implements ExibidorDeMensagens { // Implementa a inter
         List<int[]> todasPosicoes = new ArrayList<>();
         for (int r = 0; r < tamanho; r++) {
             for (int c = 0; c < tamanho; c++) {
-                todasPosicoes.add(new int[]{r, c});
+                todasPosicoes.add(new int[] { r, c });
             }
         }
 
@@ -569,7 +598,8 @@ abstract class CacaNiquel implements ExibidorDeMensagens { // Implementa a inter
             colunasComCoringa.add(posSelecionada[1]);
         }
 
-        // Se ainda faltam curingas para o total desejado, adiciona em qualquer posição restante.
+        // Se ainda faltam curingas para o total desejado, adiciona em qualquer posição
+        // restante.
         while (posicoesCoringas.size() < limiteCoringa) {
             List<int[]> disponiveisParaCoringa = new ArrayList<>();
             for (int[] pos : todasPosicoes) {
@@ -592,9 +622,10 @@ abstract class CacaNiquel implements ExibidorDeMensagens { // Implementa a inter
     }
 
     /**
-     * Método auxiliar para verificar se uma lista de arrays de int contém um array específico.
+     * Método auxiliar para verificar se uma lista de arrays de int contém um array
+     * específico.
      *
-     * @param lista A lista de arrays de int.
+     * @param lista    A lista de arrays de int.
      * @param elemento O array de int a ser verificado.
      * @return Verdadeiro se a lista contiver o elemento, falso caso contrário.
      */
@@ -649,7 +680,8 @@ abstract class CacaNiquel implements ExibidorDeMensagens { // Implementa a inter
 
     /**
      * Verifica se houve uma vitória em alguma linha, coluna ou diagonal.
-     * Uma vitória ocorre quando todos os símbolos em uma linha são iguais (ignorando curingas).
+     * Uma vitória ocorre quando todos os símbolos em uma linha são iguais
+     * (ignorando curingas).
      *
      * @param tabuleiro O tabuleiro.
      * @return Verdadeiro se houver vitória, falso caso contrário.
@@ -684,7 +716,8 @@ abstract class CacaNiquel implements ExibidorDeMensagens { // Implementa a inter
 
     /**
      * Verifica se houve uma sequência bônus em alguma linha, coluna ou diagonal.
-     * Uma sequência bônus ocorre quando os símbolos formam uma sequência numérica ou alfabética (sem curingas).
+     * Uma sequência bônus ocorre quando os símbolos formam uma sequência numérica
+     * ou alfabética (sem curingas).
      *
      * @param tabuleiro O tabuleiro.
      * @return Verdadeiro se houver bônus, falso caso contrário.
@@ -788,7 +821,8 @@ class SlotDificil extends CacaNiquel {
  * Classe principal que orquestra o jogo.
  */
 public class Principal implements ExibidorDeMensagens { // Implementa a interface
-    private static final String ARQUIVO_DADOS_JOGADORES = "jogadores.csv"; // Nome do arquivo para salvar/carregar dados dos jogadores.
+    private static final String ARQUIVO_DADOS_JOGADORES = "jogadores.csv"; // Nome do arquivo para salvar/carregar dados
+                                                                           // dos jogadores.
     private Scanner scanner; // Objeto Scanner para leitura de entrada do usuário.
 
     /**
@@ -844,20 +878,23 @@ public class Principal implements ExibidorDeMensagens { // Implementa a interfac
                         exibirMensagem("\n--- Resultado do Slot ---"); // Usa o método da interface
                         for (String[] linha : tabuleiro) {
                             for (String simbolo : linha) {
-                                System.out.print(simbolo + " "); // Continua usando System.out.print para o tabuleiro sem nova linha
+                                System.out.print(simbolo + " "); // Continua usando System.out.print para o tabuleiro
+                                                                 // sem nova linha
                             }
                             exibirMensagem(""); // Adiciona uma nova linha após cada linha do tabuleiro
                         }
                         exibirMensagemFormatada("Vitória: %s%n", vitoria ? "Sim" : "Não"); // Usa o método da interface
                         exibirMensagemFormatada("Bônus: %s%n", bonus ? "Sim" : "Não"); // Usa o método da interface
-                        exibirMensagemFormatada("Saldo Atual: R$%.2f%n", jogadorLogado.getSaldo()); // Usa o método da interface
+                        exibirMensagemFormatada("Saldo Atual: R$%.2f%n", jogadorLogado.getSaldo()); // Usa o método da
+                                                                                                    // interface
                         exibirMensagem("-------------------------"); // Usa o método da interface
                     } catch (RuntimeException e) {
                         exibirMensagem("Erro ao jogar: " + e.getMessage()); // Usa o método da interface
                     }
                     break;
                 case 2:
-                    exibirMensagemFormatada("\nSeu saldo atual é: R$%.2f%n", jogadorLogado.getSaldo()); // Usa o método da interface
+                    exibirMensagemFormatada("\nSeu saldo atual é: R$%.2f%n", jogadorLogado.getSaldo()); // Usa o método
+                                                                                                        // da interface
                     break;
                 case 3:
                     exibirMensagem("Digite o valor a depositar:"); // Usa o método da interface
@@ -865,7 +902,8 @@ public class Principal implements ExibidorDeMensagens { // Implementa a interfac
                     scanner.nextLine(); // Consome a nova linha.
                     if (valorDeposito > 0) {
                         jogadorLogado.depositar(valorDeposito);
-                        exibirMensagemFormatada("Depósito realizado com sucesso! Novo saldo: R$%.2f%n", jogadorLogado.getSaldo()); // Usa o método da interface
+                        exibirMensagemFormatada("Depósito realizado com sucesso! Novo saldo: R$%.2f%n",
+                                jogadorLogado.getSaldo()); // Usa o método da interface
                     } else {
                         exibirMensagem("O valor do depósito deve ser positivo."); // Usa o método da interface
                     }
@@ -876,7 +914,8 @@ public class Principal implements ExibidorDeMensagens { // Implementa a interfac
                     scanner.nextLine(); // Consome a nova linha.
                     try {
                         jogadorLogado.sacar(valorSaque);
-                        exibirMensagemFormatada("Saque realizado com sucesso! Novo saldo: R$%.2f%n", jogadorLogado.getSaldo()); // Usa o método da interface
+                        exibirMensagemFormatada("Saque realizado com sucesso! Novo saldo: R$%.2f%n",
+                                jogadorLogado.getSaldo()); // Usa o método da interface
                     } catch (RuntimeException e) {
                         exibirMensagem("Falha no saque: " + e.getMessage()); // Usa o método da interface
                     }
@@ -897,7 +936,8 @@ public class Principal implements ExibidorDeMensagens { // Implementa a interfac
     /**
      * Permite ao jogador selecionar o nível de dificuldade do caça-níqueis.
      *
-     * @return Uma instância da classe CacaNiquel correspondente à dificuldade escolhida.
+     * @return Uma instância da classe CacaNiquel correspondente à dificuldade
+     *         escolhida.
      */
     private CacaNiquel selecionarNivelDificuldade() {
         CacaNiquel jogo = null; // Variável para armazenar a instância do jogo.
